@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Xmee | Login and Register Form Html Templates</title>
+	<title>Data | Login and Register Form Html Templates</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Favicon -->
@@ -56,19 +56,21 @@
     </div>
     <br> <br>
 
-    <h1>Document List</h1>
-     <br>
-    <hr>
-    <ul>
-        {% for document in documents %}
-            <li>
-                <h2>Label: {{ document.label }}</h2>
-                <h2>Encrypterd: {{ document.encrypterd }}</h2>
-                <h2>Decrypted: {{ document.textarea }}</h2>
-            </li>
-            <hr>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <h1>Document List</h1>
+        <br>
+        <hr>
+        <ul>
+            {% for document in documents %}
+                <li>
+                    <h2>Label: {{ document.label }}</h2>
+                    <h2>Encrypterd: {{ document.encrypterd }}</h2>
+                    <h2>Decrypted: {{ document.textarea }}</h2>
+                </li>
+                <hr>
+            {% endfor %}
+        </ul>
+    </div>
 
 	<!-- jquery-->
 	<script src="{% static 'js/jquery.min.js' %}"></script>
