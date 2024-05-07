@@ -8,42 +8,16 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 from cryptography.hazmat.primitives import hashes
 import os
+
+from django.contrib.auth.models import User, auth
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
 
 
 def index(request):
     return render(request, 'login-5.html')
-
-
-# def data_storage(request):
-#     key = b'\x12\xf3yS\x907\xb43\xd6j\xb7\\lq\x83\xc2T\xc1\x80\x1fY\x8d\xfbq\xd3\xda\x80H\xda\xdeAF'
-#     iv = b'\x16\xc1\xd4\x1d\xe8\x0c#\x86\xcf\x18@n\x88\x18\x06\xd3'
-
-#     if request.method == 'POST':
-#         label = request.POST.get('label')
-#         textarea = request.POST.get('textarea').encode('utf-8')
-
-#         # Message to be encrypted
-
-#         # Encrypt the message
-#         iv, ciphertext = encrypt_message(key, textarea)
-#         print("Encrypted message:", ciphertext)
-
-#         new_document = models.Document(label=label, textarea=ciphertext)
-#         new_document.save()
-
-#     all_documents = models.Document.objects.all()
-
-#     all_decrypted_data = []
-
-#     for data in all_documents:
-#         d = {}
-#         d['label'] = data.label
-#         print("data", data.textarea)
-#         d['textarea'] = decrypt_message(key, iv, data.get(['textarea'])
-
-#     return render(request, 'data-storage.html', {"documents": all_documents})
-
 
 def login_view(request):
     if request.method == 'POST':
@@ -63,79 +37,22 @@ def login_view(request):
 
 
 
-# def encrypt_message(key, message):
-#     # Generate a random initialization vector (IV)
-#     iv = b'\x16\xc1\xd4\x1d\xe8\x0c#\x86\xcf\x18@n\x88\x18\x06\xd3'
-    
-#     # Pad the message to be a multiple of 128 bits (AES block size)
-#     padder = padding.PKCS7(128).padder()
-#     padded_message = padder.update(message) + padder.finalize()
-    
-#     # Create an AES cipher object
-#     cipher = Cipher(algorithms.AES(key), modes.CFB(iv), backend=default_backend())
-    
-#     # Encrypt the message
-#     encryptor = cipher.encryptor()
-#     ciphertext = encryptor.update(padded_message) + encryptor.finalize()
-    
-#     return iv, ciphertext
-
-# def decrypt_message(key, iv, ciphertext):
-#     # Create an AES cipher object
-#     cipher = Cipher(algorithms.AES(key), modes.CFB(iv), backend=default_backend())
-    
-#     # Decrypt the message
-#     decryptor = cipher.decryptor()
-#     padded_message = decryptor.update(ciphertext) + decryptor.finalize()
-    
-#     # Unpad the message
-#     unpadder = padding.PKCS7(128).unpadder()
-#     message = unpadder.update(padded_message) + unpadder.finalize()
-    
-#     return message
-# from Crypto.Cipher import AES
-# from Crypto.Util.Padding import pad, unpad
-# import base64
-
-# def encrypt_message(key, iv, plaintext):
-#     cipher = AES.new(key, AES.MODE_CBC, iv)
-#     padded_plaintext = pad(plaintext, AES.block_size)
-#     ciphertext = cipher.encrypt(padded_plaintext)
-#     return base64.b64encode(iv).decode('utf-8'), base64.b64encode(ciphertext).decode('utf-8')
-
-# def decrypt_message(key, iv, ciphertext):
-#     cipher = AES.new(key, AES.MODE_CBC, base64.b64decode(iv))
-#     decrypted_bytes = cipher.decrypt(base64.b64decode(ciphertext))
-#     return unpad(decrypted_bytes, AES.block_size).decode('utf-8')
-
-# def data_storage(request):
-#     key = b'\x12\xf3yS\x907\xb43\xd6j\xb7\\lq\x83\xc2T\xc1\x80\x1fY\x8d\xfbq\xd3\xda\x80H\xda\xdeAF'
-#     iv = b'\x16\xc1\xd4\x1d\xe8\x0c#\x86\xcf\x18@n\x88\x18\x06\xd3'
-
-#     if request.method == 'POST':
-#         label = request.POST.get('label')
-#         textarea = request.POST.get('textarea').encode('utf-8')
-
-#         # Encrypt the message
-#         iv, ciphertext = encrypt_message(key, iv, textarea)
-
-#         new_document = models.Document(label=label, textarea=ciphertext)
-#         new_document.save()
-
-#     all_documents = models.Document.objects.all()
-
-#     all_decrypted_data = []
-
-#     for data in all_documents:
-#         d = {}
-#         d['label'] = data.label
-#         d['textarea'] = decrypt_message(key, iv, data.textarea)
-#         d['encrypterd'] =  data.textarea
-#         all_decrypted_data.append(d)
-
-#     return render(request, 'data-storage.html', {"documents": all_decrypted_data})
+def register_view(request):
+    if request.method == "POST":
+        username = request.POST["name"]
+        email = request.POST["email"]
+        password = request.POST["password"]      
+        user = User.objects.create_user(email, email, password)
+        user.first_name = username
+        user.is_active = False
+        user.save()
+        return redirect('/')
+    return render(request, 'register.html', {'error_message': ''})
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('/')
 
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad, unpad
@@ -178,3 +95,15 @@ def data_storage(request):
         all_decrypted_data.append(d)
 
     return render(request, 'data-storage.html', {"documents": all_decrypted_data})
+
+def view_data(request):
+    all_decrypted_data = {}
+    if request.method == 'GET':
+        en = request.GET["en"]
+        dy = request.GET["dy"]
+        all_decrypted_data ={
+            'en': en,
+            'dy': dy
+        }
+    print("all_decrypted_data", all_decrypted_data)
+    return render(request, 'view-data.html', all_decrypted_data)

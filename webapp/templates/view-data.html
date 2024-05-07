@@ -6,7 +6,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Data | Login and Register Form Html Templates</title>
+	<title>View Data</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<!-- Favicon -->
@@ -35,46 +35,13 @@
 
     </div>
     <br> <br>
+    
     <div class="container">
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <input type="text" class="form-control" name="label" placeholder="Enter label" required="required">
-            </div>
-            <br> <br>
-
-            <div class="form-group">
-                <textarea type="password" class="form-control" name="textarea" placeholder="textarea" required="required"> </textarea>
-            </div>
-            <br>
-            <div class="form-group">
-                <div class="fxt-content-between">
-                    <button type="submit" class="fxt-btn-fill">Save Data</button>
-                    <div class="checkbox">
-                        <input id="checkbox1" type="checkbox">
-                    </div>
-                </div>
-            </div>
-        </form>    
-    </div>
-    <br> <br>
-
-    <div class="container">
-        <h1>Document List</h1>
-        <br>
+        <h1>Document Data</h1>
         <hr>
-        <ul>
-            {% for document in documents %}
-                <li>
-                    <h2>Label: {{ document.label }}</h2>
-                    <a target="_blank" href="/view-data?en={{document.encrypterd}}&dy={{document.textarea}}" class="btn btn-sm btn-dark"> View Data</a>
-                    <!-- <h2>Encrypterd: {{ document.encrypterd }}</h2>
-                    <h2>Decrypted: {{ document.textarea }}</h2> -->
-                </li>
-                <hr>
-            {% endfor %}
-        </ul>
+        <h1>Encrypted Data: {{en}}</h1> 
+        <h1>Decrypted Data: {{dy}}</h1>
+        
     </div>
 
 	<!-- jquery-->
